@@ -1,107 +1,77 @@
-# This repo is no longer maintained. Consider using `npm init vite` and selecting the `svelte` option or — if you want a full-fledged app framework — use [SvelteKit](https://kit.svelte.dev), the official application framework for Svelte.
+# Color Shade Generator
 
----
+Generate lighter shades of any color with our Color Shade Generator. Pick a color and automatically get 10 shades, perfect for design and development. Download your custom color palette in seconds.
 
-# svelte app
+## Features
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+- Pick a color using the color picker.
+- Automatically generate 10 shades of the selected color.
+- Download the generated color shades as a PNG image.
+- View the HEX code of each shade within the SVG.
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+## Installation
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
-```
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/imranpollob/color-shades
+   cd color-shades
+   ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
 
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
 
-## Get started
+## Usage
 
-Install the dependencies...
+1. Open the app in your browser (typically at `http://localhost:8080`).
+2. Use the color picker to select your desired color.
+3. View the automatically generated shades in the SVG.
+4. Click the "Download" button to save the color shades as a PNG image.
 
-```bash
-cd svelte-app
-npm install
-```
+## Code Overview
 
-...then start [Rollup](https://rollupjs.org):
+### `App.svelte`
 
-```bash
-npm run dev
-```
+This is the main component of the application. It includes the SVG element displaying the color shades, the color picker input, and the download button.
 
-Navigate to [localhost:8080](http://localhost:8080). You should see your app running. Edit a component file in `src`, save it, and reload the page to see your changes.
+### Color Conversion Functions
 
-By default, the server will only respond to requests from localhost. To allow connections from other computers, edit the `sirv` commands in package.json to include the option `--host 0.0.0.0`.
+- `hexToRgb(hex)`: Converts a HEX color to RGB format.
+- `rgbToHex(r, g, b)`: Converts RGB values back to HEX format.
+- `generateLighterShades(hex, steps)`: Generates an array of lighter shades, including the original color as the first shade.
 
-If you're using [Visual Studio Code](https://code.visualstudio.com/) we recommend installing the official extension [Svelte for VS Code](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode). If you are using other editors you may need to install a plugin in order to get syntax highlighting and intellisense.
+### Event Handlers
 
-## Building and running in production mode
+- `generateShades()`: Uses `generateLighterShades` to compute the shades for the selected color.
+- `download()`: Uses `saveSvgAsPng` to save the SVG element as a PNG image.
 
-To create an optimised version of the app:
+## Meta Tags
 
-```bash
-npm run build
-```
+The app includes comprehensive meta tags for SEO and social media sharing:
 
-You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
+- Description, Open Graph, and Twitter Card meta tags for better visibility and click-through rates.
 
+## Dependencies
 
-## Single-page app mode
+- [Svelte](https://svelte.dev/)
+- [@eastdesire/jscolor](https://www.npmjs.com/package/@eastdesire/jscolor)
+- [save-svg-as-png](https://www.npmjs.com/package/save-svg-as-png)
 
-By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
+## License
 
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```js
-"start": "sirv public --single"
-```
+## Acknowledgments
 
-## Using TypeScript
+- Inspired by various online color palette generators.
+- Special thanks to the contributors of Svelte, jscolor, and save-svg-as-png packages.
 
-This template comes with a script to set up a TypeScript development environment, you can run it immediately after cloning the template with:
+## Contributing
 
-```bash
-node scripts/setupTypeScript.js
-```
-
-Or remove the script via:
-
-```bash
-rm scripts/setupTypeScript.js
-```
-
-If you want to use `baseUrl` or `path` aliases within your `tsconfig`, you need to set up `@rollup/plugin-alias` to tell Rollup to resolve the aliases. For more info, see [this StackOverflow question](https://stackoverflow.com/questions/63427935/setup-tsconfig-path-in-svelte).
-
-## Deploying to the web
-
-### With [Vercel](https://vercel.com)
-
-Install `vercel` if you haven't already:
-
-```bash
-npm install -g vercel
-```
-
-Then, from within your project folder:
-
-```bash
-cd public
-vercel deploy --name my-project
-```
-
-### With [surge](https://surge.sh/)
-
-Install `surge` if you haven't already:
-
-```bash
-npm install -g surge
-```
-
-Then, from within your project folder:
-
-```bash
-npm run build
-surge public my-project.surge.sh
-```
+Feel free to submit issues and pull requests for any improvements or new features.
