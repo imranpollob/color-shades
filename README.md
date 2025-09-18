@@ -4,6 +4,7 @@ Pick a color and automatically get 10 light and 10 dark shades.
 
 Perfect for design and development. Easily copy the HEX values you need in a click.
 
+![screenshot](./screenshot.jpeg)
 
 ## Installation
 
