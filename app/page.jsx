@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 const LIGHT_SHADES = 10;
 const DARK_SHADES = 10;
 const DEFAULT_COLOR = '#1C902F';
+const HEX_DIGITS = '0123456789ABCDEF';
 
 function normalizeHex(value) {
   if (!value) return null;
@@ -58,10 +59,18 @@ function mixHex(baseHex, targetHex, amount) {
   return rgbToHex(blend(r1, r2), blend(g1, g2), blend(b1, b2));
 }
 
+function randomHexColor() {
+  let hex = '#';
+  for (let i = 0; i < 6; i += 1) {
+    hex += HEX_DIGITS[Math.floor(Math.random() * HEX_DIGITS.length)];
+  }
+  return hex;
+}
+
 function generateLighterShades(hex, steps) {
   const [r, g, b] = hexToRgb(hex);
   const shades = [];
-  for (let i = 1; i <= steps; i++) {
+  for (let i = 1; i <= steps - 1; i++) {
     const factor = i / steps;
     const newR = Math.round(r + (255 - r) * factor);
     const newG = Math.round(g + (255 - g) * factor);
@@ -74,7 +83,7 @@ function generateLighterShades(hex, steps) {
 function generateDarkerShades(hex, steps) {
   const [r, g, b] = hexToRgb(hex);
   const shades = [];
-  for (let i = 1; i <= steps; i++) {
+  for (let i = 1; i <= steps - 1; i++) {
     const factor = i / steps;
     const newR = Math.round(r * (1 - factor));
     const newG = Math.round(g * (1 - factor));
@@ -229,6 +238,13 @@ export default function Page() {
     }
   }, []);
 
+  const handleRandomize = useCallback(() => {
+    const next = randomHexColor();
+    setColor(next);
+    setHexInput(next);
+    setActiveColor(next);
+  }, []);
+
   const copyShade = useCallback(async (hex) => {
     setActiveColor(hex);
 
@@ -279,6 +295,10 @@ export default function Page() {
             spellCheck={false}
             aria-label="Color hex value"
           />
+          <button type="button" className="randomize" onClick={handleRandomize}>
+            <span aria-hidden="true" className="randomize-icon">🎲</span>
+            Random Color
+          </button>
         </div>
       </section>
 
