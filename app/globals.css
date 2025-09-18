@@ -1,0 +1,216 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #f4f6fb 0%, #ffffff 45%, #f1f5f9 100%);
+  color: #0f172a;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero {
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  margin-bottom: 12px;
+}
+
+.hero p {
+  margin: 0 auto;
+  max-width: 640px;
+  font-size: 1.05rem;
+  color: #475569;
+}
+
+.controls {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+}
+
+.control-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.control-group input[type='color'] {
+  border: none;
+  background: none;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.1), 0 12px 24px rgba(15, 23, 42, 0.1);
+}
+
+.control-group input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 16px;
+}
+
+.control-group input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 16px;
+}
+
+.hex-input {
+  padding: 12px 16px;
+  font-size: 1rem;
+  min-width: 160px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.05);
+}
+
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.palette-row {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.palette-row header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.palette-row header p {
+  margin: 4px 0 0;
+  color: #64748b;
+}
+
+.shade-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.shade-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px 18px;
+  border: none;
+  border-radius: 18px;
+  background: var(--shade);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08), 0 12px 24px rgba(15, 23, 42, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.shade-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.16), 0 18px 30px rgba(15, 23, 42, 0.1);
+}
+
+.shade-tile:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.9);
+  outline-offset: 3px;
+}
+
+.shade-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+}
+
+.shade-hex {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.shade-feedback {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.4);
+  color: #f8fafc;
+  letter-spacing: 0.04em;
+}
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 20px;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 999px;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 32px 16px 56px;
+  }
+
+  .control-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .control-group input[type='color'] {
+    align-self: flex-start;
+  }
+}

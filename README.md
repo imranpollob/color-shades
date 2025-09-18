@@ -1,13 +1,13 @@
 # Color Shade Generator
 
-Generate lighter shades of any color with our Color Shade Generator. Pick a color and automatically get 10 shades, perfect for design and development. Download your custom color palette in seconds.
+Generate lighter and darker shades of any color with our Color Shade Generator. Pick a color and automatically get 10 light and 10 dark shades, perfect for design and development. Copy the HEX values you need in a click.
 
 ## Features
 
-- Pick a color using the color picker.
-- Automatically generate 10 shades of the selected color.
-- Download the generated color shades as a PNG image.
-- View the HEX code of each shade within the SVG.
+- Pick a color using the color picker or enter a HEX code.
+- Automatically generate 10 lighter and 10 darker shades of the selected color.
+- Copy any shade's HEX code with a single click.
+- Accessible contrast-aware text colors for every tile.
 
 ## Installation
 
@@ -29,27 +29,29 @@ Generate lighter shades of any color with our Color Shade Generator. Pick a colo
 
 ## Usage
 
-1. Open the app in your browser (typically at `http://localhost:8080`).
-2. Use the color picker to select your desired color.
-3. View the automatically generated shades in the SVG.
-4. Click the "Download" button to save the color shades as a PNG image.
+1. Open the app in your browser (typically at `http://localhost:3000`).
+2. Use the color picker or HEX input to select your desired color.
+3. Explore the lighter and darker shade tiles.
+4. Click any tile to copy its HEX value to the clipboard.
 
 ## Code Overview
 
-### `App.svelte`
+### `app/page.jsx`
 
-This is the main component of the application. It includes the SVG element displaying the color shades, the color picker input, and the download button.
+This is the main component of the application. It renders the color picker, HEX input, and the lighter/darker shade grids.
 
 ### Color Conversion Functions
 
 - `hexToRgb(hex)`: Converts a HEX color to RGB format.
 - `rgbToHex(r, g, b)`: Converts RGB values back to HEX format.
-- `generateLighterShades(hex, steps)`: Generates an array of lighter shades, including the original color as the first shade.
+- `generateLighterShades(hex, steps)`: Generates an array of lighter shades, including the original color as the first tile.
+- `generateDarkerShades(hex, steps)`: Generates an array of darker shades, including the original color as the first tile.
 
 ### Event Handlers
 
-- `generateShades()`: Uses `generateLighterShades` to compute the shades for the selected color.
-- `download()`: Uses `saveSvgAsPng` to save the SVG element as a PNG image.
+- `handleHexInput()`: Validates user input and updates the palette when a valid HEX color is entered.
+- `handleColorPicker()`: Updates the palette when a color is selected with the native color picker.
+- `copyShade()`: Copies the clicked shade to the clipboard and shows a toast.
 
 ## Meta Tags
 
@@ -59,9 +61,8 @@ The app includes comprehensive meta tags for SEO and social media sharing:
 
 ## Dependencies
 
-- [Svelte](https://svelte.dev/)
-- [@eastdesire/jscolor](https://www.npmjs.com/package/@eastdesire/jscolor)
-- [save-svg-as-png](https://www.npmjs.com/package/save-svg-as-png)
+- [Next.js](https://nextjs.org/)
+- [React](https://react.dev/)
 
 ## License
 
@@ -70,7 +71,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Inspired by various online color palette generators.
-- Special thanks to the contributors of Svelte, jscolor, and save-svg-as-png packages.
+- Special thanks to the React and Next.js communities.
 
 ## Contributing
 
