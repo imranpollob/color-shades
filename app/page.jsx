@@ -50,10 +50,18 @@ function rgbToHex(r, g, b) {
   );
 }
 
+function mixHex(baseHex, targetHex, amount) {
+  const [r1, g1, b1] = hexToRgb(baseHex);
+  const [r2, g2, b2] = hexToRgb(targetHex);
+  const clamp = (value) => Math.min(255, Math.max(0, value));
+  const blend = (start, end) => clamp(Math.round(start + (end - start) * amount));
+  return rgbToHex(blend(r1, r2), blend(g1, g2), blend(b1, b2));
+}
+
 function generateLighterShades(hex, steps) {
   const [r, g, b] = hexToRgb(hex);
   const shades = [];
-  for (let i = 1; i <= steps - 1; i++) {
+  for (let i = 1; i <= steps; i++) {
     const factor = i / steps;
     const newR = Math.round(r + (255 - r) * factor);
     const newG = Math.round(g + (255 - g) * factor);
@@ -66,7 +74,7 @@ function generateLighterShades(hex, steps) {
 function generateDarkerShades(hex, steps) {
   const [r, g, b] = hexToRgb(hex);
   const shades = [];
-  for (let i = 1; i <= steps - 1; i++) {
+  for (let i = 1; i <= steps; i++) {
     const factor = i / steps;
     const newR = Math.round(r * (1 - factor));
     const newG = Math.round(g * (1 - factor));
@@ -111,6 +119,10 @@ export default function Page() {
   const [copiedHex, setCopiedHex] = useState('');
   const [toastMessage, setToastMessage] = useState('');
   const toastTimerRef = useRef(null);
+  const [activeColor, setActiveColor] = useState(DEFAULT_COLOR);
+  const originalBodyBackgroundRef = useRef('');
+  const originalBodyTransitionRef = useRef('');
+  const originalRootBackgroundRef = useRef('');
 
   const { lighterTiles, darkerTiles } = useMemo(() => {
     const lighter = generateLighterShades(color, LIGHT_SHADES);
@@ -144,6 +156,28 @@ export default function Page() {
       clearTimeout(toastTimerRef.current);
     }
   }, []);
+
+  useEffect(() => {
+    originalBodyBackgroundRef.current = document.body.style.backgroundColor;
+    originalBodyTransitionRef.current = document.body.style.transition;
+    document.body.style.transition = 'background-color 0.6s ease';
+    const computed = getComputedStyle(document.documentElement);
+    originalRootBackgroundRef.current = computed.getPropertyValue('--page-background');
+
+    return () => {
+      document.body.style.backgroundColor = originalBodyBackgroundRef.current;
+      document.body.style.transition = originalBodyTransitionRef.current;
+      if (originalRootBackgroundRef.current) {
+        document.documentElement.style.setProperty('--page-background', originalRootBackgroundRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const nextBackground = activeColor;
+    document.body.style.backgroundColor = nextBackground;
+    document.documentElement.style.setProperty('--page-background', nextBackground);
+  }, [activeColor]);
 
   const showToast = useCallback((message) => {
     if (toastTimerRef.current) {
@@ -179,6 +213,7 @@ export default function Page() {
     const normalized = normalizeHex(next);
     if (normalized) {
       setColor(normalized);
+      setActiveColor(normalized);
     }
   }, []);
 
@@ -190,10 +225,13 @@ export default function Page() {
     const next = normalizeHex(event.target.value);
     if (next) {
       setColor(next);
+      setActiveColor(next);
     }
   }, []);
 
   const copyShade = useCallback(async (hex) => {
+    setActiveColor(hex);
+
     if (!navigator?.clipboard) {
       showToast('Clipboard access is unavailable in this browser.');
       return;
@@ -210,16 +248,15 @@ export default function Page() {
   }, [showToast]);
   return (
     <main className="container">
-      <section className="hero">
-        <h1>Color Shade Generator</h1>
-        <p>
-          Create lighter and darker shades of your color and copy them instantly.
-        </p>
-      </section>
-
       <section className="controls" aria-label="Color input controls">
+        <header className="controls-header">
+          <h1>Color Shade Generator</h1>
+          <p>
+            Create lighter and darker shades of your color and copy them instantly.
+          </p>
+        </header>
         <label className="control-label" htmlFor="color-picker">
-          Base color
+          Select a Base Color
         </label>
         <div className="control-group">
           <input
