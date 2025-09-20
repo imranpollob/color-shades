@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import ColorPicker from '@rc-component/color-picker';
 
 const LIGHT_SHADES = 10;
 const DARK_SHADES = 10;
@@ -132,6 +133,10 @@ export default function Page() {
   const originalBodyBackgroundRef = useRef('');
   const originalBodyTransitionRef = useRef('');
   const originalRootBackgroundRef = useRef('');
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const pickerRef = useRef(null);
+  const colorTriggerRef = useRef(null);
+  const hexInputRef = useRef(null);
 
   const { lighterTiles, darkerTiles } = useMemo(() => {
     const lighter = generateLighterShades(color, LIGHT_SHADES);
@@ -230,12 +235,26 @@ export default function Page() {
     setHexInput(color);
   }, [color]);
 
-  const handleColorPicker = useCallback((event) => {
-    const next = normalizeHex(event.target.value);
-    if (next) {
-      setColor(next);
-      setActiveColor(next);
+  const handlePickerChange = useCallback((next) => {
+    const nextHex = typeof next === 'string' ? next : next?.toHexString?.();
+    const normalized = normalizeHex(nextHex);
+    if (normalized) {
+      setColor(normalized);
+      setHexInput(normalized);
+      setActiveColor(normalized);
     }
+  }, []);
+
+  const handlePreviewClick = useCallback(() => {
+    setIsPickerOpen((previous) => !previous);
+  }, []);
+
+  const handleHexFocus = useCallback(() => {
+    setIsPickerOpen(true);
+  }, []);
+
+  const closePicker = useCallback(() => {
+    setIsPickerOpen(false);
   }, []);
 
   const handleRandomize = useCallback(() => {
@@ -243,7 +262,39 @@ export default function Page() {
     setColor(next);
     setHexInput(next);
     setActiveColor(next);
+    setIsPickerOpen(false);
   }, []);
+
+  useEffect(() => {
+    if (!isPickerOpen) {
+      return undefined;
+    }
+
+    const handleClickOutside = (event) => {
+      if (
+        pickerRef.current?.contains(event.target)
+        || colorTriggerRef.current?.contains(event.target)
+        || hexInputRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      closePicker();
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closePicker();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [closePicker, isPickerOpen]);
 
   const copyShade = useCallback(async (hex) => {
     setActiveColor(hex);
@@ -275,31 +326,47 @@ export default function Page() {
           Select a Base Color
         </label>
         <div className="control-group">
-          <input
+          <button
             id="color-picker"
-            type="color"
-            value={color}
-            onChange={handleColorPicker}
-            aria-label="Pick a base color"
-          />
+            type="button"
+            ref={colorTriggerRef}
+            className="color-preview"
+            onClick={handlePreviewClick}
+            aria-label="Open color picker dialog"
+          >
+            <span className="color-preview-inner" style={{ backgroundColor: color }} />
+          </button>
           <input
             id="hex-input"
             className="hex-input"
             value={hexInput}
             onChange={handleHexInput}
             onBlur={handleHexBlur}
+            onFocus={handleHexFocus}
+            onClick={handleHexFocus}
             placeholder="#1C902F"
             autoComplete="off"
             autoCorrect="off"
             autoCapitalize="none"
             spellCheck={false}
             aria-label="Color hex value"
+            ref={hexInputRef}
           />
           <button type="button" className="randomize" onClick={handleRandomize}>
             <span aria-hidden="true" className="randomize-icon">🎲</span>
             Random Color
           </button>
         </div>
+        {isPickerOpen && (
+          <div className="color-popover" ref={pickerRef} role="dialog" aria-label="Color picker">
+            <ColorPicker
+              className="color-picker"
+              value={color}
+              onChange={handlePickerChange}
+              disabledAlpha
+            />
+          </div>
+        )}
       </section>
 
       <section className="palette" aria-label="Generated color shades">

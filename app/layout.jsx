@@ -1,4 +1,5 @@
 import './globals.css';
+import '@rc-component/color-picker/assets/index.css';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 
 export const metadata = {
